@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
  * 并通过DefaultTokenServices根据access_token和认证服务器配置里的TokenStore从redis或者jwt里解析出用户
  * 注意认证中心的@EnableResourceServer和别的微服务里的@EnableResourceServer有些不同
  * 别的微服务是通过org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices来获取用户的
+ *
  * @author wangyajing
  * @date 2019-08-14
  */
@@ -35,8 +36,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .anonymous()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/order/**").authenticated();
+//                .authorizeRequests()
                 //配置order访问控制，必须认证过后才可以访问
+//                .antMatchers("/order/**").authenticated();
+                .authorizeRequests()
+                //配置访问控制，必须具有admin_role权限才可以访问
+                .antMatchers("/order/**").hasAnyAuthority("admin_role");
+//              .antMatchers("/order/**").hasAnyRole("admin");
     }
 }
